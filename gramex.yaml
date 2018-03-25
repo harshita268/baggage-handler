@@ -4,3 +4,22 @@ import:
     path: $GRAMEXAPPS/ui/gramex.yaml    # Import the UI components
     YAMLURL: $YAMLURL/ui/               # ... at this URL
     namespace: [url]
+
+url:
+  home:
+    pattern: /$YAMLURL/
+    handler: FileHandler
+    kwargs:
+      path: $YAMLPATH/index.html
+      transform:
+        "*.html":
+            function: template
+  simulation:
+    pattern: /$YAMLURL/simulation
+    handler: FileHandler
+    kwargs:
+      path: $YAMLPATH/simulation.html
+      transform:
+        "*.html":
+            function: template
+
