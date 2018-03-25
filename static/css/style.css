@@ -1,0 +1,9 @@
+/* All style css goes here */
+
+.default-height {
+	min-height: 650px;
+	max-height: 650px;
+	height: 650px;
+	background-color: #ccc;
+	border: 1px solid #000;
+}
