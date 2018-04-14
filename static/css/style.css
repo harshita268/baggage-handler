@@ -17,6 +17,12 @@ body {
 	height: 134.4px;
 }
 
+.tst-arrival {
+	border: 1px solid #000;
+	height: 181.2px;
+
+}
+
 .tab-content {
 	margin-top: 50px;
 }
@@ -29,4 +35,9 @@ body {
 	margin-top: 15%;
 	width: 500px;
 	height: 580px;
+}
+
+#conveyor-belt {
+	height: 555px !important;
+	background-color: grey;
 }
