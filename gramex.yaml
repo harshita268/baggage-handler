@@ -7,19 +7,10 @@ import:
 
 url:
   home:
-    pattern: /$YAMLURL/
+    pattern: /$YAMLURL
     handler: FileHandler
     kwargs:
       path: $YAMLPATH/index.html
       transform:
         "*.html":
             function: template
-  simulation:
-    pattern: /$YAMLURL/simulation
-    handler: FileHandler
-    kwargs:
-      path: $YAMLPATH/simulation.html
-      transform:
-        "*.html":
-            function: template
-

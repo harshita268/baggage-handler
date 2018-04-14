@@ -1,9 +1,32 @@
 /* All style css goes here */
 
+body {
+	overflow-x: hidden;
+	background-color: #fff;
+}
 .default-height {
-	min-height: 650px;
-	max-height: 650px;
-	height: 650px;
-	background-color: #ccc;
+	min-height: 580px;
+	max-height: 580px;
+	height: 580px;
+	//background-color: #ccc;
+	//border: 1px solid #000;
+}
+
+.tst {
 	border: 1px solid #000;
+	height: 134.4px;
+}
+
+.tab-content {
+	margin-top: 50px;
+}
+
+.padding-bottom {
+	margin-bottom: 5px !important;
+}
+
+#plane1, #plane2 {
+	margin-top: 15%;
+	width: 500px;
+	height: 580px;
 }

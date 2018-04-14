@@ -1,0 +1,49 @@
+<script type="text/javascript" src="static/js/baggage-checkin.js"></script>
+<div class="row">
+  <div class="col-md-2 default-height" id="baggage-checkin">
+    <!-- Check-in Counters -->
+  </div>
+  <div class="col-md-2 default-height">
+    <div class="row">
+      <div class="col-md-12 tst padding-bottom">
+        <span class="label label-primary">Pass Data Entry, RFID plugged</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 tst padding-bottom">
+        <span class="label label-primary">X-Ray Scanner</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 tst padding-bottom">
+        <span class="label label-primary">Sequencing, Sorting</span>
+      </div>
+    </div>
+    <div class="row padding-bottom">
+      <div class="col-md-12 tst">
+        <span class="label label-primary">Loading</span>
+      </div>
+    </div>
+    </div>
+    <div class="col-md-4">
+      <svg id="plane1"></svg>
+    </div>
+    <div class="col-md-4">
+      <svg id="plane2"></svg>
+    </div>
+  </div>
+
+</div>
+<script type="text/javascript">
+  var obj = {
+    'counter_count': 2,
+    'selector': '#baggage-checkin'
+  }
+  visualize_checkin(obj)
+  $("#plane1").load('static/svg/320.svg');
+  $("#plane2").load('static/svg/320.svg');
+  setTimeout(function(){
+    add_seats()
+  }, 300)
+
+</script>
