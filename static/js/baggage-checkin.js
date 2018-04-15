@@ -14,9 +14,12 @@ var visualize_checkin = function(count) {
 			counter = 2;
 		}
 		$('.counter-' + counter).append(
-			"<div class='passenger' title='PAX: " + d['Passenger name'] +
+			"<div class='passenger' hide-when=" + _time_in_checkin_queue(d['Baggage count'])  + " title='PAX: " + d['Passenger name'] +
 			"\n Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)'></div>")
 	})
+	if(parseInt($('.passenger').attr('hide-when')) == count) {
+		$('[hide-when="' + count + '"]').remove()
+	}
 }
 
 var baggage_scanner = function() {
@@ -113,3 +116,6 @@ function create_time(time) {
 	return time.split(':').reduce((acc,time) => (60 * acc) + +time)
 }
 
+function _time_in_checkin_queue(bags) {
+	return count + parseInt(_config[0]['checkin_time']) + parseInt(bags > 1 ? _config[0]['additional_baggage_time'] * (bags - 1) : 0)
+}
