@@ -14,12 +14,15 @@ var visualize_checkin = function(count) {
 			counter = 2;
 		}
 		$('.counter-' + counter).append(
-			"<div class='passenger' hide-when=" + _time_in_checkin_queue('.counter-' + counter, d['Baggage count'])  + " title='PAX: " + d['Passenger name'] +
-			"\n Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)'></div>")
-	})
-	if(parseInt($('.passenger').attr('hide-when')) == count) {
-		$('[hide-when="' + count + '"]').remove()
-	}
+			"<div class='passenger' hide-when=" + _time_in_checkin_queue('.counter-' + counter, d['Baggage count'])['hide-when']  + " title='PAX: " + d['Passenger name'] +
+			"\n Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
+			"\n Check-in ETA: " + _time_in_checkin_queue('.counter-' + counter, d['Baggage count'])['checkin-complete'] +
+			"'></div>")
+		})
+
+	$('[hide-when="' + count + '"]').remove()
+	$('.counter-1 > .passenger').first().css('background-color', 'orange')
+	$('.counter-2 > .passenger').first().css('background-color', 'orange')
 }
 
 var baggage_scanner = function() {
@@ -105,11 +108,15 @@ function timer()
   if(status == 'play') {
 	count += 1;
 	visualize_checkin(count)
+	$('t').text(create_time_format(count));
+  }
+}
+
+
+function create_time_format(count) {
 	var measuredTime = new Date(null);
 	measuredTime.setSeconds(count); // specify value of SECONDS
-	var MHSTime = measuredTime.toISOString().substr(11, 8);
-	$('t').text(MHSTime);
-  }
+	return measuredTime.toISOString().substr(11, 8);
 }
 
 function create_time(time) {
@@ -123,6 +130,8 @@ function _time_in_checkin_queue(queue, bags) {
 	if(total_pax_in_queue > 0) {
 		count_offset = parseInt($(queue + '> .passenger').last().attr('hide-when'));
 	}
-
-	return count_offset + parseInt(_config[0]['checkin_time']) + parseInt(bags > 1 ? _config[0]['additional_baggage_time'] * (bags - 1) : 0)
+	var hide_when = count_offset + parseInt(_config[0]['checkin_time']) + parseInt(bags > 1 ? _config[0]['additional_baggage_time'] * (bags - 1) : 0);
+	return {'hide-when' : hide_when,
+			'checkin-complete' : create_time_format(hide_when)
+			}
 }
