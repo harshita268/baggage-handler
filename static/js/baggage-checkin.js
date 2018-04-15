@@ -5,10 +5,17 @@ var _data, _config, _status = 'stop', count = create_time(d3.min(_data, function
 		return c['Time']})) - parseInt(_config[0]['start_before']);
 var visualize_checkin = function(count) {
 	var tmp = _.filter(_data, function(d){ return d['time_second'] == count })
-	console.log(tmp)
 	tmp.forEach(function(d){
-		$('.counter-1').append(
-			"<div class='passenger' title='passenger " + (1) + "'></div>")
+		var counter = 1;
+		if($('.counter-1 > div').length == $('.counter-2 > div').length) {
+			// TBD
+		}
+		else if($('.counter-1 > div').length > $('.counter-2 > div').length) {
+			counter = 2;
+		}
+		$('.counter-' + counter).append(
+			"<div class='passenger' title='PAX: " + d['Passenger name'] +
+			"\n Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)'></div>")
 	})
 }
 
