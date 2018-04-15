@@ -1,12 +1,15 @@
 /*Baggage checkin simulation goes here.*/
 
 
-var _data, _status = 'stop', count = create_default_time();
-var visualize_checkin = function(obj) {
-	for(var i=0;i<50;i++){
+var _data, _config, _status = 'stop', count = create_time(d3.min(_data, function(c) {
+		return c['Time']})) - parseInt(_config[0]['start_before']);
+var visualize_checkin = function(count) {
+	var tmp = _.filter(_data, function(d){ return d['time_second'] == count })
+	console.log(tmp)
+	tmp.forEach(function(d){
 		$('.counter-1').append(
-			"<div class='passenger' title='passenger " + (i+1) + "'></div>")
-	}
+			"<div class='passenger' title='passenger " + (1) + "'></div>")
+	})
 }
 
 var baggage_scanner = function() {
@@ -81,16 +84,17 @@ var _click_handlers = function(node) {
 		$('.glyphicon-pause, .glyphicon-play').removeClass('glyphicon-pause')
 		$('.glyphicon').eq(0).addClass('glyphicon-play')
 		$('.glyphicon').eq(0).attr('status', 'play')
-		count = create_default_time()
+		count = create_time(d3.min(_data, function(c) { return c['Time']})) - parseInt(_config[0]['start_before']);
 		$('t').text('__:__:__');
 	}
 }
 
-setInterval(myMethod, 1000);
-function myMethod()
+setInterval(timer, 1000);
+function timer()
 {
   if(status == 'play') {
 	count += 1;
+	visualize_checkin(count)
 	var measuredTime = new Date(null);
 	measuredTime.setSeconds(count); // specify value of SECONDS
 	var MHSTime = measuredTime.toISOString().substr(11, 8);
@@ -98,6 +102,7 @@ function myMethod()
   }
 }
 
-function create_default_time() {
-	return d3.min(_data, function(c) { return c['Time'] }).split(':').reduce((acc,time) => (60 * acc) + +time)
+function create_time(time) {
+	return time.split(':').reduce((acc,time) => (60 * acc) + +time)
 }
+

@@ -52,8 +52,14 @@
   </body>
   <script type="text/javascript">
     d3.csv('data.csv', function(d){
+      d.forEach(function(_d, _i){
+        d[_i]['time_second'] = create_time(_d['Time'])
+      });
       _data = d;
-    })
+    });
+    d3.csv('config.csv', function(d){
+      _config = d;
+    });
     var page = 'departure';
     try {
       page = window.location.href.split('?')[1].split('=')[1]
@@ -65,5 +71,9 @@
     $('[status]').on('click', function(){
         _click_handlers($(this));
     })
+    function create_time(time) {
+      return time.split(':').reduce((acc,time) => (60 * acc) + +time)
+    }
+
   </script>
 </html>
