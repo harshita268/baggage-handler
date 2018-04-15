@@ -1,53 +1,10 @@
 /*Baggage checkin simulation goes here.*/
 
 var visualize_checkin = function(obj) {
-	var total_width = parseFloat($(obj['selector']).width());
-	var placeholder = d3.selectAll(obj['selector']);
-	for(i = 0; i < obj.counter_count; i++) {
-		placeholder.append('svg')
-					.attr('width', (total_width / obj.counter_count) - 10)
-					.attr('height', "640")
-					.attr('x', i * (total_width / obj.counter_count))
-					.attr('y', 0)
-					.attr('asset', 'counter-' + i)
+	for(var i=0;i<50;i++){
+		$('.counter-1').append("<div class='passenger' title='passenger " + (i+1) + "'></div>")
+		$('.counter-2').append("<div class='passenger' title='passenger " + (i+1) + "'></div>")
 	}
-	process_queue('counter-')
-}
-
-var process_queue = function(selector) {
-	var max_capacity = 50;
-	$("[asset*='" + selector + "']").each(function(i, d){
-		var counter = d3.selectAll("[asset='counter-" + i + "']");
-		var counter_legend = counter.append('g')
-
-		counter_legend.append('rect')
-						.attr('y', '0')
-						.attr('width', 80)
-						.attr('fill', 'green')
-						.attr('height', 20)
-		counter_legend.append('text')
-						.attr('y', '15')
-						.attr('x', '2')
-						.text('Check-in :' + (i +1))
-						.style({'font-weight':'bold',
-										'fill': '#000'})
-		var y_pos = 8;
-		counter.selectAll('g[class="checkin-pass"]')
-			.data(d3.range(Math.floor(Math.random() * 50) + 1 )).enter()
-			.append('g').attr('class', 'checkin-pass').append('rect')
-				.attr('width', "55")
-				.attr('x', 10)
-				.attr('height', (550. - (max_capacity * 1.)) / max_capacity)
-				.attr('y', function(idx, d){
-					y_pos += (5.2 + ((560. - (max_capacity * 5.)) / max_capacity));
-					return parseFloat(idx == 0 ? 20:y_pos);
-
-					})
-				.style('fill', '#123456')
-				.attr('stroke-width', '1')
-				.attr('stroke-color', '#000')
-
-	})
 }
 
 var baggage_scanner = function() {

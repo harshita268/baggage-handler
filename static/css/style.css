@@ -46,5 +46,9 @@ body {
 	height: 300px !important;
 }
 
-
-
+.passenger {
+	height:10.7px;
+	width: 60px;
+	background-color: #000;
+	border: 1px solid #fff;
+}
