@@ -8,7 +8,7 @@ var visualize_checkin = function(count) {
 	tmp.forEach(function(d){
 		var counter = 1;
 		if($('.counter-1 > div').length == $('.counter-2 > div').length) {
-			// TBD
+			// TBD and baggage weight
 		}
 		else if($('.counter-1 > div').length > $('.counter-2 > div').length) {
 			counter = 2;
@@ -99,6 +99,7 @@ var _click_handlers = function(node) {
 		$('.glyphicon').eq(0).attr('status', 'play')
 		count = create_time(d3.min(_data, function(c) { return c['Time']})) - parseInt(_config[0]['start_before']);
 		$('t').text('__:__:__');
+		$('.passenger').remove();
 	}
 }
 
