@@ -26,9 +26,9 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/">E2E Baggage Handler</a>
-          <button class="btn btn-md glyphicon glyphicon-play"></button>
-          <button class="btn btn-md glyphicon glyphicon-stop"></button>
-          <button class="btn btn-md"><b>Time : 00:00 AM</b></button>
+          <button status="play" class="btn btn-md glyphicon glyphicon-play"></button>
+          <button status="stop" class="btn btn-md glyphicon glyphicon-stop disabled"></button>
+          <button class="btn btn-md disabled"><b>Time : <t>__:__:__</t></b></button>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -48,6 +48,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="static/bootstrap/js/bootstrap.min.js"></script>
     <script src="static/d3/d3.v3.min.js"></script>
+    <script src="static/js/underscore-min.js"></script>
   </body>
   <script type="text/javascript">
     d3.csv('data.csv', function(d){
@@ -61,5 +62,8 @@
     $('li').removeClass('active');
     $('.' + page).addClass('active');
     $('.tab-content').load(page + '.html')
+    $('[status]').on('click', function(){
+        _click_handlers($(this));
+    })
   </script>
 </html>
