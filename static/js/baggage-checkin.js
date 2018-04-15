@@ -1,9 +1,12 @@
 /*Baggage checkin simulation goes here.*/
 
+
+var _data;
 var visualize_checkin = function(obj) {
+	console.log(_data)
 	for(var i=0;i<50;i++){
-		$('.counter-1').append("<div class='passenger' title='passenger " + (i+1) + "'></div>")
-		$('.counter-2').append("<div class='passenger' title='passenger " + (i+1) + "'></div>")
+		$('.counter-1').append(
+			"<div class='passenger' title='passenger " + (i+1) + "'></div>")
 	}
 }
 
@@ -25,7 +28,7 @@ var add_seats = function() {
 			 .attr("width", obj.seat_size)
 			 .attr("class", function(i,d) { return 'seat-' + i })
 			 .attr("height", obj.seat_size)
-			 .attr("fill", "#123")
+			 .attr("fill", "#555555")
 			 .attr("x", function(i, d) {
 				if(i % 3 == 0) {
 				 	offset_passage = 10.;

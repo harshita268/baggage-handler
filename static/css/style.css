@@ -52,3 +52,7 @@ body {
 	background-color: #000;
 	border: 1px solid #fff;
 }
+
+button {
+	margin-top: 2%;
+}
