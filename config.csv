@@ -1,2 +1,2 @@
-checkin_time,additional_baggage_time,start_before
-120,30,2
+checkin,additional_baggage_time,start_before,xray,sorting,loading
+5,2,2,8,10,30

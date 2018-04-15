@@ -11,24 +11,20 @@
     </div>
   </div>
   <div class="col-md-2 default-height">
+    <div class="row padding-bottom">
+      <div class="col-md-12 tst" id="loading">
+        <div class="stage-heading">Baggage Loading</div>
+      </div>
+    </div>
     <div class="row">
-      <div class="col-md-12 tst padding-bottom">
-        <div class="stage-heading">Pass Data Entry, RFID plugged</div>
+      <div class="col-md-12 tst padding-bottom" id="sorting">
+        <div class="stage-heading">RFID based Sequencing, Sorting</div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12 tst padding-bottom">
         <div class="stage-heading">X-Ray Scanner</div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12 tst padding-bottom">
-        <div class="stage-heading">Sequencing, Sorting</div>
-      </div>
-    </div>
-    <div class="row padding-bottom">
-      <div class="col-md-12 tst">
-        <div class="stage-heading">Baggage Hall</div>
+        <div id="xray"></div>
       </div>
     </div>
     </div>
@@ -52,5 +48,5 @@
   setTimeout(function(){
     add_seats()
     add_baggage_bins()
-  }, 300)
+  }, 800)
 </script>

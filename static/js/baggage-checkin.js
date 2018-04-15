@@ -2,7 +2,8 @@
 
 
 var _data, _config, _status = 'stop', count = create_time(d3.min(_data, function(c) {
-		return c['Time']})) - parseInt(_config[0]['start_before']);
+		return c['Time']})) - parseInt(_config[0]['start_before']),
+		process_stages = ['checkin', 'xray', 'sorting', 'loading'];
 var visualize_checkin = function(count) {
 	var tmp = _.filter(_data, function(d){ return d['time_second'] == count })
 	tmp.forEach(function(d){
@@ -13,22 +14,44 @@ var visualize_checkin = function(count) {
 		else if($('.counter-1 > div').length > $('.counter-2 > div').length) {
 			counter = 2;
 		}
-		$('.counter-' + counter).append(
-			"<div class='passenger' hide-when=" + _time_in_checkin_queue('.counter-' + counter, d['Baggage count'])['hide-when']  + " title='PAX: " + d['Passenger name'] +
-			"\n Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
-			"\n Check-in ETA: " + _time_in_checkin_queue('.counter-' + counter, d['Baggage count'])['checkin-complete'] +
-			"'></div>")
+		append_baggage('.counter-' + counter, d, process_stages[0])
 		})
 
-	$('[hide-when="' + count + '"]').remove()
+	if($('#baggage-checkin').find('[hide-when="' + count + '"]').length > 0) {
+		$('#baggage-checkin').find('[hide-when="' + count + '"]').each(function(d){
+			var x = {}, node = $(this)
+			loop_through = [['pax-name', 'Passenger name'], ['bag-count', 'Baggage count'],
+							['bag-weight', 'Baggage weight(Kg)'], ['seat-no', 'Seat no']]
+			loop_through.forEach(function(dx){
+				x[dx[1]] = node.attr(dx[0])
+			})
+			node.remove()
+			for(var i=1 ; i <= parseInt(x['Baggage count']); i++) {
+				append_baggage('#xray', x, process_stages[1])
+			}
+		})
+	}
+	higlight_processing_node();
+}
+
+
+function higlight_processing_node() {
 	$('.counter-1 > .passenger').first().css('background-color', 'orange')
 	$('.counter-2 > .passenger').first().css('background-color', 'orange')
+	$('#xray > div').first().css('background-color', 'orange')
 }
 
 var baggage_scanner = function() {
 
 }
 
+var append_baggage = function(selector, d, stage) {
+	$(selector).append(
+	"<div stage='" + stage + "' pax-name='" + d['Passenger name'] + "' bag-count='" + d['Baggage count'] + "' class='passenger' hide-when=" + _time_in_checkin_queue(selector, d['Baggage count'], stage)['hide-when']  + " title='PAX: " + d['Passenger name'] +
+	"\n Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
+	"\n Check-in ETA: " + _time_in_checkin_queue(selector, d['Baggage count'], stage)['checkin-complete'] +
+	"' bag-weight='" + d['Baggage weight(Kg)']+ "' seat-no='" + d['Seat no'] + "'></div>")
+}
 
 var add_seats = function() {
 	var obj = {
@@ -71,11 +94,9 @@ var add_baggage_bins = function() {
 	})
 }
 
-
 var conveyor = function() {
 
 }
-
 
 var _click_handlers = function(node) {
 	status = node.attr('status');
@@ -100,6 +121,7 @@ var _click_handlers = function(node) {
 		count = create_time(d3.min(_data, function(c) { return c['Time']})) - parseInt(_config[0]['start_before']);
 		$('t').text('__:__:__');
 		$('.passenger').remove();
+		$('#xray').empty();
 	}
 }
 
@@ -124,14 +146,14 @@ function create_time(time) {
 	return time.split(':').reduce((acc,time) => (60 * acc) + +time)
 }
 
-function _time_in_checkin_queue(queue, bags) {
+function _time_in_checkin_queue(queue, bags, stage) {
 	var total_pax_in_queue = $(queue + '> .passenger').length,
 		count_offset = count;
-
 	if(total_pax_in_queue > 0) {
 		count_offset = parseInt($(queue + '> .passenger').last().attr('hide-when'));
 	}
-	var hide_when = count_offset + parseInt(_config[0]['checkin_time']) + parseInt(bags > 1 ? _config[0]['additional_baggage_time'] * (bags - 1) : 0);
+	var hide_when = count_offset + parseInt(_config[0]['checkin']) + parseInt(bags > 1 ? _config[0]['additional_baggage_time'] * (bags - 1) : 0);
+
 	return {'hide-when' : hide_when,
 			'checkin-complete' : create_time_format(hide_when)
 			}
