@@ -56,3 +56,11 @@ body {
 button {
 	margin-top: 2%;
 }
+
+.stage-heading {
+	background-color: #123456;
+	width: 116%;
+	margin-left: -8% !important;
+	color: #fff;
+	text-align: center;
+}
