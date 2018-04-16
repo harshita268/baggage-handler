@@ -2,14 +2,11 @@
 
 body {
 	overflow-x: hidden;
-	background-color: #fff;
 }
 .default-height {
 	min-height: 580px;
 	max-height: 580px;
 	height: 580px;
-	//background-color: #ccc;
-	//border: 1px solid #000;
 }
 
 .tst {
@@ -48,7 +45,7 @@ body {
 
 .passenger {
 	height:10.7px;
-	width: 60px;
+	//width: 60px;
 	background-color: #000;
 	border: 1px solid #fff;
 }
