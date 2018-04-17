@@ -1,6 +1,5 @@
 /*Baggage checkin simulation goes here.*/
 
-
 var _data, _config, _status = 'stop', count = create_time(d3.min(_data, function(c) {
 		return c['Time']})) - parseInt(_config[0]['start_before']),
 		process_stages = ['checkin', 'xray', 'sorting', 'loading'],
@@ -11,7 +10,11 @@ var _data, _config, _status = 'stop', count = create_time(d3.min(_data, function
 			"2": [9, 16],
 			"3": [17, 22],
 			"4": [23, 30]
-		};
+		},
+		last_passenger = _data.filter(function(d){ return d['Time'] == d3.max(_data, function(c) { return c['Time'] }) })
+		last_passenger_name = last_passenger[last_passenger.length-1]['Passenger name'],
+		last_passenger_baggage_count = last_passenger[last_passenger.length-1]['Baggage count'];
+
 var visualize_checkin = function(count) {
 	var tmp = _.filter(_data, function(d){ return d['time_second'] == count })
 	tmp.forEach(function(d){
@@ -59,9 +62,9 @@ var visualize_checkin = function(count) {
 					$('#' + attach_stage).append(tmp_node)
 				}
 				else {
-					$('#plane2').find('rect[seat-no="' + tmp_node.attr("seat-no") + '"]').attr(
-						'fill', 'orange')
-					console.log('loading to the plane')
+					if($('#loading').find('[pax-name="' + last_passenger_name+ '"]').length == last_passenger_baggage_count) {
+						boarding_start('#loading');
+					}
 				}
 				$('#' + attach_stage + ' > .passenger').first().css('background-color', 'orange')
 			}
@@ -70,6 +73,15 @@ var visualize_checkin = function(count) {
 	higlight_processing_node();
 }
 
+
+
+var boarding_start = function(selector) {
+	$(selector + ' > .passenger').each(function(d){
+	console.log($(this).attr("seat-no"))
+	$('#plane2').find('rect[seat-no="' + $(this).attr("seat-no") + '"]').attr(
+						'fill', 'orange')
+	});
+}
 
 function higlight_processing_node() {
 	$('.counter-1 > .passenger').first().css('background-color', 'orange')
