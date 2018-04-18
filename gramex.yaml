@@ -7,10 +7,17 @@ import:
 
 url:
   home:
-    pattern: $YAMLURL
+    pattern: /$YAMLURL
     handler: FileHandler
     kwargs:
       path: $YAMLPATH/index.html
       transform:
         "*.html":
             function: template
+  data-capture:
+    pattern: /$YAMLURL/data
+    handler: FunctionHandler
+    kwargs:
+      function: brain.process_data
+      headers:
+        Content-Type: application/json

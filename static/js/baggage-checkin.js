@@ -5,12 +5,8 @@ var _data, _config, _status = 'stop', count = create_time(d3.min(_data, function
 		process_stages = ['checkin', 'xray', 'sorting', 'loading'],
 		loop_through = [['pax-name', 'Passenger name'], ['bag-count', 'Baggage count'],
 						['bag-weight', 'Baggage weight(Kg)'], ['seat-no', 'Seat no']],
-		bin_mapping = {
-			"1": [1, 8],
-			"2": [9, 16],
-			"3": [17, 22],
-			"4": [23, 30]
-		},
+		baggage_allotment = {},
+		loading_flag = true,
 		last_passenger = _data.filter(function(d){ return d['Time'] == d3.max(_data, function(c) { return c['Time'] }) })
 		last_passenger_name = last_passenger[last_passenger.length-1]['Passenger name'],
 		last_passenger_baggage_count = last_passenger[last_passenger.length-1]['Baggage count'];
@@ -63,7 +59,10 @@ var visualize_checkin = function(count) {
 				}
 				else {
 					if($('#loading').find('[pax-name="' + last_passenger_name+ '"]').length == last_passenger_baggage_count) {
-						boarding_start('#loading');
+						if(loading_flag == true) {
+							boarding_start('#loading');
+							loading_flag = false;
+						}
 					}
 				}
 				$('#' + attach_stage + ' > .passenger').first().css('background-color', 'orange')
@@ -77,10 +76,79 @@ var visualize_checkin = function(count) {
 
 var boarding_start = function(selector) {
 	$(selector + ' > .passenger').each(function(d){
-	console.log($(this).attr("seat-no"))
 	$('#plane2').find('rect[seat-no="' + $(this).attr("seat-no") + '"]').attr(
-						'fill', 'orange')
+						'fill', 'orange');
+	baggage_loading_start($(this));
 	});
+	for(x in baggage_allotment) {
+		loop_through.forEach(function(d){
+			$('.baggage-' + x).attr(d[0], baggage_allotment[x][d[0]])	
+		})
+		
+		$('.baggage-' + x).attr('title', baggage_allotment[x]['seat-no'])
+		$('.baggage-' + x).attr('fill', 'orange')
+	}
+	log_data('baggage')
+}
+
+var baggage_loading_start = function(node) {
+	/* assign baggage bins and inititate loading */
+
+	var bin_mapping = {
+			1: {'row': [1, 8],   'binno': [1, 75]},
+			2: {'row': [9, 16],  'binno': [76, 171]},
+			3: {'row': [17, 22], 'binno': [172, 259]},
+			4: {'row': [23, 30], 'binno': [260, 343]}
+		},
+		baggage_size2slot_map = {
+			'L' : 2,
+			'M' : 1,
+			'S' : 1,
+			'XL': 3
+		};
+	var seat_map_flag = true, bin_map_flag = true, seat = parseInt(node.attr('seat-no').split('-')[0]);
+	for(i=1;i<=4;i++) {
+		if(seat >= bin_mapping[i]['row'][0] && seat <= bin_mapping[i]['row'][1]){
+			seat_map_flag = false;
+			for(ind=bin_mapping[i]['binno'][0];ind <= bin_mapping[i]['binno'][1];ind++) {
+				if(baggage_allotment[ind] == undefined) {
+					_tmp = {}
+					loop_through.forEach(function(l){  
+						_tmp[l[0]] = node.attr(l[0])
+					})
+					baggage_allotment[ind] = _tmp;
+					bin_map_flag = false
+				}
+				if(bin_map_flag == false) {
+					break;
+				}
+			}
+		}
+		if(seat_map_flag == false) {
+			break;
+		}
+	}
+	
+}
+
+var log_data = function(mode) {
+	if(mode == 'baggage') {
+		t_ = ['pax-name','bag-weight','seat-no','bag-size','binno']
+		$('#plane1').find('rect').each(function(d){
+			var node = $(this), query_str = '';
+			t_.forEach(function(_d){
+				if(_d == 'binno'){
+					query_str += _d + '=' + node.attr('class').split('-')[1]
+				}
+				else {
+					query_str += _d + '=' + node.attr(_d)
+				}
+				query_str += '&'
+			})
+			$.get('/data?' + query_str + 'stage=bin', function(d){
+			});
+		})
+	}
 }
 
 function higlight_processing_node() {
@@ -131,6 +199,7 @@ var _click_handlers = function(node) {
 		$('.passenger').remove();
 		$('#xray, #sorting, #loading').empty();
 		$('#plane2').find('rect').attr('fill', '#123456')
+		loading_flag = true;
 	}
 }
 
