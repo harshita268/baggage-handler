@@ -208,7 +208,18 @@ function timer()
 {
   if(status == 'play') {
 	count += 1;
-	visualize_checkin(count)
+	var page = 'departure';
+    try {
+      page = window.location.href.split('?')[1].split('=')[1]
+    }
+    catch(e){}
+    if(page == 'departure') {
+    	visualize_checkin(count)	
+    }
+    else if(page == 'arrival') {
+    	visualize_arrival(count)
+    }
+	
 	$('t').text(create_time_format(count));
   }
 }

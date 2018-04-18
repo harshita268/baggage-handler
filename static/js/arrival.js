@@ -50,12 +50,40 @@ var calculate_hide_when = function(stage, d) {
 					_f = true
 					offset_time = 0
 				}
-				
 				_hide_time = count + (_config[0]['carriage_travel_time'] * travel_trip_flag) + offset_time;
 				$('.baggage-' + _d['binno']).attr('hide-when', _hide_time)	
 			}
 		}	
 	})
-	
-	return 'vinay'
+}
+
+
+var visualize_arrival = function(count) {
+	var arrival_process_stages = ['wagon', 'loader', 'conveyor'],
+		node = $('#plane1 rect[hide-when="' + count + '"]'),
+		x = {};
+	if(node.length > 0) {
+		loop_through.forEach(function(dx){
+					x[dx[1]] = node.attr(dx[0])
+				})
+		node.attr('fill', 'green');
+		append_baggage_arrival('#wagon', x, 'wagon')
+	}
+}
+
+
+var append_baggage_arrival = function(selector, d, stage) {
+	var col = stage == 'checkin' ? 'col-md-9': 'col-md-4';
+	$(selector).append(
+	"<div stage='" + stage + "' pax-name='" + d['Passenger name'] + "' bag-count='" + d['Baggage count'] + "' class='" + col + 
+	" passenger' hide-when=" + '1'  +
+	" title='"  + get_baggage_title_arrival(selector, d, stage) +
+	"' bag-weight='" + d['Baggage weight(Kg)']+ "' seat-no='" + d['Seat no'] + "'></div>")
+}
+
+
+var get_baggage_title_arrival = function(selector, d, stage) {
+	return "PAX :" + d['Passenger name'] +
+	"<br/> Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
+	"<br/> Check-in ETA: " + ''
 }
