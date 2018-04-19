@@ -206,8 +206,8 @@ var append_baggage = function(selector, d, stage) {
 
 var get_baggage_title = function(selector, d, stage) {
 	return "PAX :" + d['Passenger name'] +
-	"<br/> Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
-	"<br/> Check-in ETA: " + _time_in_checkin_queue(selector, d['Baggage count'], stage)['checkin-complete']
+	"\n Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
+	"\n Check-in ETA: " + _time_in_checkin_queue(selector, d['Baggage count'], stage)['checkin-complete']
 }
 
 

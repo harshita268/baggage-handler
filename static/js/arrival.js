@@ -124,6 +124,6 @@ var append_baggage_arrival = function(selector, d, stage, node) {
 
 var get_baggage_title_arrival = function(selector, d, stage, node) {
 	return "PAX :" + d['Passenger name'] +
-	"<br/> Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
-	"<br/> " + stage + " ETA: " + create_time_format(parseInt(node.attr('hide-when')) + parseInt(_config[0]['wagon_to_loader_time']))
+	"\n Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
+	"\n " + stage + " ETA: " + create_time_format(parseInt(node.attr('hide-when')) + parseInt(_config[0]['wagon_to_loader_time']))
 }
