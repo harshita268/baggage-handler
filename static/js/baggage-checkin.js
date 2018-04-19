@@ -85,6 +85,7 @@ var boarding_start = function(selector) {
 		$('.baggage-' + x).attr('title', baggage_allotment[x]['seat-no'])
 		$('.baggage-' + x).attr('fill', 'orange')
 	}
+	$('#loading div').remove()
 	log_data('baggage')
 }
 
@@ -193,7 +194,8 @@ var append_baggage = function(selector, d, stage) {
 			sms_handler(String(aad[0]['Contact number']), msg)	
 		}
 	}
-}
+}	
+	$(selector + ' empty').remove()
 
 	$(selector).append(
 	"<div stage='" + stage + "' pax-name='" + d['Passenger name'] + "' bag-count='" + d['Baggage count'] + "' class='" + col + " passenger' hide-when=" + _time_in_checkin_queue(selector, d['Baggage count'], stage)['hide-when']  +
@@ -259,8 +261,20 @@ function timer()
 	
 	$('t').text(create_time_format(count));
   }
+  process_empty_msg()
 }
 
+function process_empty_msg() {
+	var _nodes = ['#xray', '#sorting', '#loading']
+	_nodes.forEach(function(selector){
+		$(selector + ' empty').remove()
+		if($(selector).children().length == 0)
+		{
+			$(selector + ' empty').remove()
+			$(selector).append("<empty style='margin-left: 15%;'>Waiting for Baggage !</empty>")
+		}
+	})
+}
 
 function create_time_format(count) {
 	var measuredTime = new Date(null);
