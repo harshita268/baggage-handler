@@ -10,7 +10,7 @@ def process_data(handler):
 	"""Hanlde the captured data and stores it in log for processing."""
 	stage = handler.get_argument('stage')
 	conf = {
-		'bin': {'fields' : ['pax-name','bag-weight','seat-no','bag-size','binno'], 
+		'bin': {'fields' : ['pax-name','bag-weight','seat-no','bag-size','binno', 'sms'], 
 				'file' : 'baggage.csv'}
 	}
 	tmp_str = ''
@@ -29,7 +29,7 @@ def append_to_data(handler, filename, string_to_append):
 		os.remove(filename);
 	with open(filename, "a") as r:
 		if mode == 'Y':
-			r.write("pax-name,bag-weight,seat-no,bag-size,binno")
+			r.write("pax-name,bag-weight,seat-no,bag-size,binno,sms")
 		r.write("\n")
 		r.write(string_to_append)
 	return {'status' : 'true'}

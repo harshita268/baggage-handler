@@ -130,22 +130,34 @@ var baggage_loading_start = function(node) {
 
 var log_data = function(mode) {
 	if(mode == 'baggage') {
-		t_ = ['pax-name','bag-weight','seat-no','bag-size','binno']
+		t_ = ['pax-name','bag-weight','seat-no','bag-size','binno','hide-when']
 		$('#plane1').find('rect').each(function(d){
 			var node = $(this), query_str = '';
 			t_.forEach(function(_d){
 				if(_d == 'binno'){
 					query_str += _d + '=' + node.attr('class').split('-')[1]
 				}
+				else if(_d == 'hide-when') {
+					query_str += 'sms=' + node.attr(_d)	
+				}
 				else {
 					query_str += _d + '=' + node.attr(_d)
 				}
+
 				query_str += '&'
 			})
 			$.get('/data?' + query_str + 'stage=bin&filemode=' + clear_baggage_flag, function(d){	
 			});
 			if(clear_baggage_flag == 'Y') {
 					clear_baggage_flag = 'N'
+			}
+			var aad = _.filter(_data, function(d_){ return d_['Passenger name'] == node.attr('pax-name') });
+			if(aad.length > 0) {
+				msg = 'Dear ' + aad[0]['Passenger name'] + ',\n Loading Completed, for 1 Bag, weight ' + 
+			  		   aad[0]['Baggage weight(Kg)'] + ' KG. Booked for flight ' + aad[0]['Flight no']
+				if(String(aad[0]['Contact number']) != 'NA') {
+					sms_handler(String(aad[0]['Contact number']), msg)	
+				}
 			}
 		})
 	}
@@ -162,10 +174,12 @@ var append_baggage = function(selector, d, stage) {
 	var col = stage == 'checkin' ? 'col-md-9': 'col-md-4';
 	if(stage == 'xray') {
 		aad = _.filter(_data, function(d_){ return d_['Seat no'] == d['Seat no'] });
-	msg = 'Dear ' + aad[0]['Passenger name'] + ',\n XRAY Cleared for 1 Bag, weight ' + 
-		  aad[0]['Baggage weight(Kg)'] + ' KG. Booked for flight ' + aad[0]['Flight no'] 
-	if(String(aad[0]['Contact number']) != 'NA') {
-		//sms_handler(String(aad[0]['Contact number']), msg)	
+	if(aad.length > 0) {
+		msg = 'Dear ' + aad[0]['Passenger name'] + ',\n XRAY Cleared for 1 Bag, weight ' + 
+			  aad[0]['Baggage weight(Kg)'] + ' KG. Booked for flight ' + aad[0]['Flight no'] + ' at ' + create_time_format(_time_in_checkin_queue(selector, d['Baggage count'], stage)['hide-when'])
+		if(String(aad[0]['Contact number']) != 'NA') {
+			sms_handler(String(aad[0]['Contact number']), msg)	
+		}
 	}
 }
 
