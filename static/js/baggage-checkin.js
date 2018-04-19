@@ -265,7 +265,7 @@ function timer()
 }
 
 function process_empty_msg() {
-	var _nodes = ['#xray', '#sorting', '#loading']
+	var _nodes = ['#xray', '#sorting', '#loading', '#wagon', '#loader', '#conveyor']
 	_nodes.forEach(function(selector){
 		$(selector + ' empty').remove()
 		if($(selector).children().length == 0)
