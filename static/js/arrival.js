@@ -19,6 +19,7 @@ var process_flight_fill = function(){
 			}
 		});
 	calculate_hide_when('wagon', d)
+	log_data('arrival')
 	});
 }
 
@@ -44,7 +45,6 @@ var calculate_hide_when = function(stage, d) {
 				_hide_time = count + (_config[0]['carriage_travel_time'] * travel_trip_flag) + offset_time;
 				$('.baggage-' + _d['binno']).attr('hide-when', _hide_time) 
 			}
-
 			else {
 				if(_f == false) {
 					_f = true
@@ -53,7 +53,20 @@ var calculate_hide_when = function(stage, d) {
 				_hide_time = count + (_config[0]['carriage_travel_time'] * travel_trip_flag) + offset_time;
 				$('.baggage-' + _d['binno']).attr('hide-when', _hide_time)	
 			}
-		}	
+		}
+	    var passenger_name = $('.baggage-' + _d['binno']).attr('pax-name');
+	    if(passenger_name != 'NA') {
+	    	var aad = _.filter(_data, function(d){ return d['Passenger name'] == passenger_name });
+	    	if(aad.length > 0) {
+	    		msg = 'Dear ' + aad[0]['Passenger name'] + ',\n Your baggage would arrive around ' +
+	    				create_time_format(parseInt($('.baggage-' + _d['binno']).attr('hide-when')) + _config[0]['wagon_to_loader_time'] + _config[0]['carriage_travel_time'] + (Math.floor(Math.random() * 6) + 1)) +
+			  		    ' Booked for flight ' + aad[0]['Flight no']
+				if(String(aad[0]['Contact number']) != 'NA') {
+					sms_handler(String(aad[0]['Contact number']), msg)	
+				}
+	    	}
+	    }
+	    
 	})
 }
 

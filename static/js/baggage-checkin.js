@@ -130,15 +130,12 @@ var baggage_loading_start = function(node) {
 
 var log_data = function(mode) {
 	if(mode == 'baggage') {
-		t_ = ['pax-name','bag-weight','seat-no','bag-size','binno','hide-when']
+		t_ = ['pax-name','bag-weight','seat-no','bag-size','binno']
 		$('#plane1').find('rect').each(function(d){
 			var node = $(this), query_str = '';
 			t_.forEach(function(_d){
 				if(_d == 'binno'){
 					query_str += _d + '=' + node.attr('class').split('-')[1]
-				}
-				else if(_d == 'hide-when') {
-					query_str += 'sms=' + node.attr(_d)	
 				}
 				else {
 					query_str += _d + '=' + node.attr(_d)
@@ -146,7 +143,7 @@ var log_data = function(mode) {
 
 				query_str += '&'
 			})
-			$.get('/data?' + query_str + 'stage=bin&filemode=' + clear_baggage_flag, function(d){	
+			$.get('/data?' + query_str + 'stage=bin&filemode=' + clear_baggage_flag + '&sms=' + create_time_format(count + Math.floor(Math.random() * 6) + 1) + '&loading=' + create_time_format(count), function(d){	
 			});
 			if(clear_baggage_flag == 'Y') {
 					clear_baggage_flag = 'N'
@@ -158,6 +155,21 @@ var log_data = function(mode) {
 				if(String(aad[0]['Contact number']) != 'NA') {
 					sms_handler(String(aad[0]['Contact number']), msg)	
 				}
+			}
+		})
+	}
+	if(mode == 'arrival') {
+		console.log(clear_baggage_flag)
+		$('#plane1').find('rect[fill="orange"]').each(function(d){
+			var pax_name = $(this).attr('pax-name'),
+				actual_arrival = create_time_format(parseInt($(this).attr('hide-when')) + _config[0]['wagon_to_loader_time'] + _config[0]['carriage_travel_time'] + 2),
+				estimated_arrival = create_time_format(parseInt($(this).attr('hide-when')) + _config[0]['wagon_to_loader_time'] + _config[0]['carriage_travel_time'] + (Math.floor(Math.random() * 6) + 1));
+
+			$.get('/data?stage=arrival&pax_name=' + pax_name + '&actual_arrival=' + actual_arrival + '&estimated_arrival=' + estimated_arrival + '&filemode=' + clear_baggage_flag, function(d){	
+			});
+			
+			if(clear_baggage_flag == 'Y') {
+					clear_baggage_flag = 'N'
 			}
 		})
 	}
