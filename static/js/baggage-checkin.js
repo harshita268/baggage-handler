@@ -200,6 +200,7 @@ var _click_handlers = function(node) {
 		$('#xray, #sorting, #loading').empty();
 		$('#plane2').find('rect').attr('fill', '#123456')
 		loading_flag = true;
+		window.location = window.location.href;
 	}
 }
 

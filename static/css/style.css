@@ -62,7 +62,7 @@ button {
 	text-align: center;
 }
 
-#loading, #sorting, #xray {
+#loading, #sorting, #xray, #wagon, #loader, #conveyor {
 	max-height: 140px;
 	overflow-y: scroll;
 }

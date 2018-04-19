@@ -1,6 +1,6 @@
 /* this is to control all functionality related to the arrival*/
 
-
+var conveyor_flag = false;
 var process_flight_fill = function(){
 	/* method responsible for processing baggage and passenger data */
 	d3.csv('baggage.csv?v=' + String(new Date()), function(d){
@@ -62,28 +62,55 @@ var visualize_arrival = function(count) {
 	var arrival_process_stages = ['wagon', 'loader', 'conveyor'],
 		node = $('#plane1 rect[hide-when="' + count + '"]'),
 		x = {};
-	if(node.length > 0) {
-		loop_through.forEach(function(dx){
-					x[dx[1]] = node.attr(dx[0])
-				})
-		node.attr('fill', 'green');
-		append_baggage_arrival('#wagon', x, 'wagon')
+	if($('#plane1 rect[hide-when]').length == $('#wagon div').length) {
+		// loader initiate
+		node = $('#wagon div');
+		var offset = 10;
+		node.each(function(){
+			var _n = $(this), _t = (parseInt(_n.attr('hide-when')) + offset)
+			_n = _n.attr('hide-when',  String(_t))
+			offset += 2;
+			$(this).remove();
+			$('#loader').append(_n);
+		})
 	}
+	else if($('#plane1 rect[hide-when]').length == $('#loader div').length) {
+		conveyor_flag = true;
+	}
+	else {
+		if(node.length > 0) {
+			node.each(function(_n){
+				loop_through.forEach(function(dx){
+						x[dx[1]] = node.attr(dx[0])
+					})
+				if($(this).attr('stage') == undefined) {
+					node.attr('fill', 'green');
+					append_baggage_arrival('#wagon', x, 'wagon', $(this))
+				}
+			})
+		}		
+	}
+	if(conveyor_flag == true){
+		var node = $('#loader div[hide-when=' + String(count) + ']');
+		$('#conveyor').append(node);
+		
+	}
+
 }
 
 
-var append_baggage_arrival = function(selector, d, stage) {
-	var col = stage == 'checkin' ? 'col-md-9': 'col-md-4';
+var append_baggage_arrival = function(selector, d, stage, node) {
+	var col = 'col-md-1';
 	$(selector).append(
 	"<div stage='" + stage + "' pax-name='" + d['Passenger name'] + "' bag-count='" + d['Baggage count'] + "' class='" + col + 
-	" passenger' hide-when=" + '1'  +
-	" title='"  + get_baggage_title_arrival(selector, d, stage) +
+	" passenger' hide-when=" + (parseInt(node.attr('hide-when')) + parseInt(_config[0]['wagon_to_loader_time'])) +
+	" title='"  + get_baggage_title_arrival(selector, d, stage, node) +
 	"' bag-weight='" + d['Baggage weight(Kg)']+ "' seat-no='" + d['Seat no'] + "'></div>")
 }
 
 
-var get_baggage_title_arrival = function(selector, d, stage) {
+var get_baggage_title_arrival = function(selector, d, stage, node) {
 	return "PAX :" + d['Passenger name'] +
 	"<br/> Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
-	"<br/> Check-in ETA: " + ''
+	"<br/> " + stage + " ETA: " + create_time_format(parseInt(node.attr('hide-when')) + parseInt(_config[0]['wagon_to_loader_time']))
 }
