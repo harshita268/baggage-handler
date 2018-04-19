@@ -19,12 +19,17 @@ def process_data(handler):
 		tmp_str +=  val_ if val_ != 'undefined' else 'NA'
 		tmp_str += ","
 	tmp_str = tmp_str[:-1]
-	return append_to_data(conf[stage]['file'], tmp_str)
+	return append_to_data(handler, conf[stage]['file'], tmp_str)
 
 
-def append_to_data(filename, string_to_append):
+def append_to_data(handler, filename, string_to_append):
 	"""Append data to the log file."""
+	mode = handler.get_argument('filemode')
+	if mode == 'Y':
+		os.remove(filename);
 	with open(filename, "a") as r:
+		if mode == 'Y':
+			r.write("pax-name,bag-weight,seat-no,bag-size,binno")
 		r.write("\n")
 		r.write(string_to_append)
 	return {'status' : 'true'}

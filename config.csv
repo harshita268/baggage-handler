@@ -1,2 +1,2 @@
-checkin,additional_baggage_time,start_before,xray,sorting,loading,unloading,conveyor_distance,baggage_opened_door,carriage_travel_time,wagon_to_loader_time
-1,1,1,1,1,5,2,2,1,2,2
+checkin,additional_baggage_time,start_before,xray,sorting,loading,unloading,baggage_opened_door,carriage_travel_time,wagon_to_loader_time
+1,1,1,1,1,5,2,2,1,2

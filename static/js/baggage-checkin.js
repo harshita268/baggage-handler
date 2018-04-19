@@ -9,7 +9,8 @@ var _data, _config, _status = 'stop', count = create_time(d3.min(_data, function
 		loading_flag = true,
 		last_passenger = _data.filter(function(d){ return d['Time'] == d3.max(_data, function(c) { return c['Time'] }) })
 		last_passenger_name = last_passenger[last_passenger.length-1]['Passenger name'],
-		last_passenger_baggage_count = last_passenger[last_passenger.length-1]['Baggage count'];
+		last_passenger_baggage_count = last_passenger[last_passenger.length-1]['Baggage count'],
+		clear_baggage_flag = 'Y';
 
 var visualize_checkin = function(count) {
 	var tmp = _.filter(_data, function(d){ return d['time_second'] == count })
@@ -49,10 +50,6 @@ var visualize_checkin = function(count) {
 						tmp_node = tmp_node.removeClass('col-md-4')
 						tmp_node = tmp_node.addClass('col-md-1')
 					}
-					// var tmp_d = {};
-					// loop_through.forEach(function(_dx){
-					// 	tmp_d[_dx[1]] = tmp_node.attr(_dx[0])
-					// })
 					tmp_node = tmp_node.attr(
 						'title', get_baggage_title('#' + attach_stage, x, attach_stage))
 					$('#' + attach_stage).append(tmp_node)
@@ -145,8 +142,11 @@ var log_data = function(mode) {
 				}
 				query_str += '&'
 			})
-			$.get('/data?' + query_str + 'stage=bin', function(d){
+			$.get('/data?' + query_str + 'stage=bin&filemode=' + clear_baggage_flag, function(d){	
 			});
+			if(clear_baggage_flag == 'Y') {
+					clear_baggage_flag = 'N'
+			}
 		})
 	}
 }
@@ -160,6 +160,15 @@ function higlight_processing_node() {
 
 var append_baggage = function(selector, d, stage) {
 	var col = stage == 'checkin' ? 'col-md-9': 'col-md-4';
+	if(stage == 'xray') {
+		aad = _.filter(_data, function(d_){ return d_['Seat no'] == d['Seat no'] });
+	msg = 'Dear ' + aad[0]['Passenger name'] + ',\n XRAY Cleared for 1 Bag, weight ' + 
+		  aad[0]['Baggage weight(Kg)'] + ' KG. Booked for flight ' + aad[0]['Flight no'] 
+	if(String(aad[0]['Contact number']) != 'NA') {
+		//sms_handler(String(aad[0]['Contact number']), msg)	
+	}
+}
+
 	$(selector).append(
 	"<div stage='" + stage + "' pax-name='" + d['Passenger name'] + "' bag-count='" + d['Baggage count'] + "' class='" + col + " passenger' hide-when=" + _time_in_checkin_queue(selector, d['Baggage count'], stage)['hide-when']  +
 	" title='"  + get_baggage_title(selector, d, stage) +
@@ -201,6 +210,7 @@ var _click_handlers = function(node) {
 		$('#plane2').find('rect').attr('fill', '#123456')
 		loading_flag = true;
 		window.location = window.location.href;
+		clear_baggage_flag = 'Y';
 	}
 }
 
@@ -319,3 +329,11 @@ var add_baggage_bins = function() {
 			.html(d)
 	})
 }
+
+
+var sms_handler = function(number, msg) {
+	url = "http://premiumsms.cybergyan.com/api/mt/SendSMS?user=wvinaysc&password=123456&senderid=BAGENQ&channel=Trans&DCS=0&flashsms=0&number=91" + number + "&text=" + msg + "&route=15";
+	$.get(url)
+}
+
+
