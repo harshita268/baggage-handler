@@ -66,3 +66,9 @@ button {
 	max-height: 140px;
 	overflow-y: scroll;
 }
+
+
+[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+}

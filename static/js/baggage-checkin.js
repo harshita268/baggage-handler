@@ -32,6 +32,7 @@ var visualize_checkin = function(count) {
 				x[dx[1]] = node.attr(dx[0])
 			})
 			if(node.attr('stage') == 'checkin') {
+				node.tooltip('hide');
 				node.remove()
 				for(var i=1 ; i <= parseInt(x['Baggage count']); i++) {
 					append_baggage('#xray', x, process_stages[1])
@@ -41,6 +42,7 @@ var visualize_checkin = function(count) {
 				var tmp_node = node,
 					attach_stage = process_stages[process_stages.indexOf(tmp_node.attr('stage')) +1];
 				if(attach_stage != undefined) {
+					node.tooltip('hide');
 					node.remove();
 					tmp_node = tmp_node.attr('stage', attach_stage)
 					tmp_node = tmp_node.css('background-color', '#123456')
@@ -90,6 +92,7 @@ var boarding_start = function(selector) {
 		$('.baggage-' + x).attr('title', get_baggage_title_plane('.baggage-' + x, baggage_allotment[x], ''))
 		$('.baggage-' + x).attr('fill', 'orange')
 	}
+	$('#loading div').tooltip('hide')
 	$('#loading div').remove()
 	log_data('baggage')
 }
@@ -384,8 +387,8 @@ var add_baggage_bins = function() {
 
 
 var sms_handler = function(number, msg) {
-	url = "http://premiumsms.cybergyan.com/api/mt/SendSMS?user=wvinaysc&password=123456&senderid=BAGENQ&channel=Trans&DCS=0&flashsms=0&number=91" + number + "&text=" + msg + "&route=15";
-	$.get(url)
+	// url = "http://premiumsms.cybergyan.com/api/mt/SendSMS?user=wvinaysc&password=123456&senderid=BAGENQ&channel=Trans&DCS=0&flashsms=0&number=91" + number + "&text=" + msg + "&route=15";
+	// $.get(url)
 }
 
 
