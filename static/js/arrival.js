@@ -9,7 +9,7 @@ var process_flight_fill = function(){
 				$('.baggage-' + _d['binno']).attr(dkey, _d[dkey]);
 			} 
 			if(_d['seat-no'] != 'NA') {
-				[['fill', 'orange'], ['title', _d['seat-no']]].forEach(function(_attr){
+				[['fill', 'orange'], ['title', get_baggage_title_plane('', _d , '')]].forEach(function(_attr){
 					$('.baggage-' + _d['binno']).attr(
 						_attr[0], _attr[1]);
 					
@@ -124,6 +124,6 @@ var append_baggage_arrival = function(selector, d, stage, node) {
 
 var get_baggage_title_arrival = function(selector, d, stage, node) {
 	return "PAX :" + d['Passenger name'] +
-	"\n Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
-	"\n " + stage + " ETA: " + create_time_format(parseInt(node.attr('hide-when')) + parseInt(_config[0]['wagon_to_loader_time']))
+	"<br/> Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
+	"<br/> " + stage + " ETA: " + create_time_format(parseInt(node.attr('hide-when')) + parseInt(_config[0]['wagon_to_loader_time']))
 }

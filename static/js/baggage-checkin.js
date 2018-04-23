@@ -73,16 +73,21 @@ var visualize_checkin = function(count) {
 
 var boarding_start = function(selector) {
 	$(selector + ' > .passenger').each(function(d){
-	$('#plane2').find('rect[seat-no="' + $(this).attr("seat-no") + '"]').attr(
-						'fill', 'orange');
+	n_ = $(this)
+	node = $('#plane2').find('rect[seat-no="' + $(this).attr("seat-no") + '"]');
+	node.attr('fill', 'orange');
+	var x_ = {}
+	loop_through.forEach(function(dx){
+		x_[dx[0]] = n_.attr(dx[0])
+	})
+	node.attr('title', get_baggage_title_plane(node, x_ , ''));
 	baggage_loading_start($(this));
 	});
 	for(x in baggage_allotment) {
 		loop_through.forEach(function(d){
 			$('.baggage-' + x).attr(d[0], baggage_allotment[x][d[0]])	
 		})
-		
-		$('.baggage-' + x).attr('title', baggage_allotment[x]['seat-no'])
+		$('.baggage-' + x).attr('title', get_baggage_title_plane('.baggage-' + x, baggage_allotment[x], ''))
 		$('.baggage-' + x).attr('fill', 'orange')
 	}
 	$('#loading div').remove()
@@ -206,8 +211,15 @@ var append_baggage = function(selector, d, stage) {
 
 var get_baggage_title = function(selector, d, stage) {
 	return "PAX :" + d['Passenger name'] +
-	"\n Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
-	"\n Check-in ETA: " + _time_in_checkin_queue(selector, d['Baggage count'], stage)['checkin-complete']
+	"<br/> Bags: " + d['Baggage count'] + " (" + d['Baggage weight(Kg)'] +" Kg)" +
+	"<br/> Check-in ETA: " + _time_in_checkin_queue(selector, d['Baggage count'], stage)['checkin-complete']
+}
+
+
+var get_baggage_title_plane = function(selector, d, stage) {
+	return "PAX :" + d['pax-name'] +
+	"<br/> Bags: " + d['bag-count'] + " (" + d['bag-weight'] +" Kg)" +
+	"<br/> Seat No: " + d['seat-no']
 }
 
 
@@ -372,8 +384,8 @@ var add_baggage_bins = function() {
 
 
 var sms_handler = function(number, msg) {
-	url = "http://premiumsms.cybergyan.com/api/mt/SendSMS?user=wvinaysc&password=123456&senderid=BAGENQ&channel=Trans&DCS=0&flashsms=0&number=91" + number + "&text=" + msg + "&route=15";
-	$.get(url)
+	// url = "http://premiumsms.cybergyan.com/api/mt/SendSMS?user=wvinaysc&password=123456&senderid=BAGENQ&channel=Trans&DCS=0&flashsms=0&number=91" + number + "&text=" + msg + "&route=15";
+	// $.get(url)
 }
 
 
