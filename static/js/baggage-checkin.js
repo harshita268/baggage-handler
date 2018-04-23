@@ -384,8 +384,8 @@ var add_baggage_bins = function() {
 
 
 var sms_handler = function(number, msg) {
-	// url = "http://premiumsms.cybergyan.com/api/mt/SendSMS?user=wvinaysc&password=123456&senderid=BAGENQ&channel=Trans&DCS=0&flashsms=0&number=91" + number + "&text=" + msg + "&route=15";
-	// $.get(url)
+	url = "http://premiumsms.cybergyan.com/api/mt/SendSMS?user=wvinaysc&password=123456&senderid=BAGENQ&channel=Trans&DCS=0&flashsms=0&number=91" + number + "&text=" + msg + "&route=15";
+	$.get(url)
 }
 
 
