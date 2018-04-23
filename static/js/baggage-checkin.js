@@ -221,8 +221,8 @@ var get_baggage_title = function(selector, d, stage) {
 
 var get_baggage_title_plane = function(selector, d, stage) {
 	return "PAX :" + d['pax-name'] +
-	"<br/> Bags: " + d['bag-count'] + " (" + d['bag-weight'] +" Kg)" +
-	"<br/> Seat No: " + d['seat-no']
+	"<br/> Bag Weight : " + d['bag-weight'] + " KG" +
+	"<br/> Seat No : " + d['seat-no']
 }
 
 
