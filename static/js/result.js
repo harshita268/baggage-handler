@@ -1,4 +1,10 @@
 
+function create_time_format(count) {
+  var measuredTime = new Date(null);
+  measuredTime.setSeconds(count); // specify value of SECONDS
+  return measuredTime.toISOString().substr(11, 8);
+}
+
 function grouped_bar() {
   var svg = d3.select("#bar"),
       margin = {top: 20, right: 20, bottom: 30, left: 40},
@@ -21,14 +27,16 @@ function grouped_bar() {
 
   d3.csv("arrival.csv", function(d, i, columns) {
     //for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = +d[columns[i]];
+    d['index'] = 'B-' + (i+1);
     d['actual_arrival'] = create_time(d['actual_arrival']);
     d['estimated_arrival'] = create_time(d['estimated_arrival'])
     	return d;	
   }, function(error, data) {
     if (error) throw error;
+    console.log(data)
     var keys = data.columns.slice(1);
 
-    x0.domain(data.map(function(d) { return d['pax-name']; }));
+    x0.domain(data.map(function(d) { return d['index']; }));
     x1.domain(keys).rangeRound([0, x0.bandwidth()]);
     y.domain([0, d3.max(data, function(d) { return d3.max(keys, function(key) { return d[key]; }); })]).nice();
 
@@ -36,13 +44,17 @@ function grouped_bar() {
       .selectAll("g")
       .data(data)
       .enter().append("g")
-        .attr("transform", function(d) { return "translate(" + x0(d['pax-name']) + ",0)"; })
+        .attr("transform", function(d) { return "translate(" + x0(d['index']) + ",0)"; })
       .selectAll("rect")
-      .data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
+      .data(function(d) { return keys.map(function(key) { return {key: key, value: d[key], 'pax-name': d['pax-name']}; }); })
       .enter().append("rect")
         .attr("x", function(d) { return x1(d.key); })
         .attr("y", function(d) { return y(d.value); })
         .attr("width", x1.bandwidth())
+        .attr("title", function(d) { console.log(d); return 'PAX name : ' + d['pax-name'] +
+              "\n" + d.key.replace("_", " ") + " : " + create_time_format(d.value); 
+
+          })
         .attr("height", function(d) { return height - y(d.value); })
         .attr("fill", function(d) { return z(d.key); });
 
