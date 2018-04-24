@@ -59,7 +59,7 @@ var calculate_hide_when = function(stage, d) {
 	    	var aad = _.filter(_data, function(d){ return d['Passenger name'] == passenger_name });
 	    	if(aad.length > 0) {
 	    		msg = 'Dear ' + aad[0]['Passenger name'] + ',\n Your baggage would arrive around ' +
-	    				create_time_format(parseInt($('.baggage-' + _d['binno']).attr('hide-when')) + _config[0]['wagon_to_loader_time'] + _config[0]['carriage_travel_time'] + (Math.floor(Math.random() * 6) + 1)) +
+	    				create_time_format(parseInt($('.baggage-' + _d['binno']).attr('hide-when')) + parseInt(_config[0]['wagon_to_loader_time']) + parseInt(_config[0]['carriage_travel_time']) + + Math.floor(Math.random() * 6) + 1) +
 			  		    ' Booked for flight ' + aad[0]['Flight no']
 				if(String(aad[0]['Contact number']) != 'NA') {
 					sms_handler(String(aad[0]['Contact number']), msg)	
@@ -81,7 +81,7 @@ var visualize_arrival = function(count) {
 		var offset = 10;
 		node.each(function(){
 			var _n = $(this), _t = (parseInt(_n.attr('hide-when')) + offset)
-			_n = _n.attr('hide-when',  String(_t))
+			_n = _n.attr('hide-when',  _t)
 			offset += 2;
 			$(this).remove();
 			$('#loader').append(_n);

@@ -168,12 +168,10 @@ var log_data = function(mode) {
 		})
 	}
 	if(mode == 'arrival') {
-		console.log(clear_baggage_flag)
-		$('#plane1').find('rect[fill="orange"]').each(function(d){
+		$('#plane1').find('rect[fill="orange"]').each(function(i, d){
 			var pax_name = $(this).attr('pax-name'),
-				actual_arrival = create_time_format(parseInt($(this).attr('hide-when')) + _config[0]['wagon_to_loader_time'] + _config[0]['carriage_travel_time'] + 2),
-				estimated_arrival = create_time_format(parseInt($(this).attr('hide-when')) + _config[0]['wagon_to_loader_time'] + _config[0]['carriage_travel_time'] + (Math.floor(Math.random() * 6) + 1));
-
+				actual_arrival = create_time_format(parseInt($(this).attr('hide-when')) + parseInt(_config[0]['wagon_to_loader_time']) + parseInt(_config[0]['carriage_travel_time']) + (2 * i)),
+				estimated_arrival = create_time_format(parseInt($(this).attr('hide-when')) + parseInt(_config[0]['wagon_to_loader_time']) + parseInt(_config[0]['carriage_travel_time']) + Math.floor(Math.random() * 6) + 1);
 			$.get('/data?stage=arrival&pax_name=' + pax_name + '&actual_arrival=' + actual_arrival + '&estimated_arrival=' + estimated_arrival + '&filemode=' + clear_baggage_flag, function(d){	
 			});
 			
@@ -387,8 +385,8 @@ var add_baggage_bins = function() {
 
 
 var sms_handler = function(number, msg) {
-	// url = "http://premiumsms.cybergyan.com/api/mt/SendSMS?user=wvinaysc&password=123456&senderid=BAGENQ&channel=Trans&DCS=0&flashsms=0&number=91" + number + "&text=" + msg + "&route=15";
-	// $.get(url)
+	url = "http://premiumsms.cybergyan.com/api/mt/SendSMS?user=wvinaysc&password=123456&senderid=BAGENQ&channel=Trans&DCS=0&flashsms=0&number=91" + number + "&text=" + msg + "&route=15";
+	$.get(url)
 }
 
 

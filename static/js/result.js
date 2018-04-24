@@ -7,7 +7,7 @@ function create_time_format(count) {
 
 function grouped_bar() {
   var svg = d3.select("#bar"),
-      margin = {top: 20, right: 20, bottom: 30, left: 40},
+      margin = {top: 20, right: 20, bottom: 50, left: 40},
       width = +svg.attr("width") - margin.left - margin.right,
       height = +svg.attr("height") - margin.top - margin.bottom,
       g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -20,7 +20,7 @@ function grouped_bar() {
       .padding(0.05);
 
   var y = d3.scaleLinear()
-      .rangeRound([height, 0]);
+      .rangeRound([height + 30, 0]);
 
   var z = d3.scaleOrdinal()
       .range(["#333", "orange"]);
@@ -33,7 +33,7 @@ function grouped_bar() {
     	return d;	
   }, function(error, data) {
     if (error) throw error;
-    console.log(data)
+
     var keys = data.columns.slice(1);
 
     x0.domain(data.map(function(d) { return d['index']; }));
@@ -49,10 +49,10 @@ function grouped_bar() {
       .data(function(d) { return keys.map(function(key) { return {key: key, value: d[key], 'pax-name': d['pax-name']}; }); })
       .enter().append("rect")
         .attr("x", function(d) { return x1(d.key); })
-        .attr("y", function(d) { return y(d.value); })
+        .attr("y", function(d) { return y(d.value) + 30; })
         .attr("width", x1.bandwidth())
         .attr("title", function(d) { console.log(d); return 'PAX name : ' + d['pax-name'] +
-              "\n" + d.key.replace("_", " ") + " : " + create_time_format(d.value); 
+              "<br/>" + d.key.replace("_", " ") + " : " + create_time_format(d.value); 
 
           })
         .attr("height", function(d) { return height - y(d.value); })
@@ -60,12 +60,12 @@ function grouped_bar() {
 
     g.append("g")
         .attr("class", "axis")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + String(parseInt(height) + 30) + ")")
         .call(d3.axisBottom(x0));
 
     g.append("g")
         .attr("class", "axis")
-        .call(d3.axisLeft(y).ticks(null, "s"))
+        .call(d3.axisLeft(y).ticks(null + 'S'))
       .append("text")
         .attr("x", 2)
         .attr("y", y(y.ticks().pop()) + 0.5)
